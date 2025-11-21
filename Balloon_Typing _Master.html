@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Balloon Typing Master</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial;
+        background-color: white;
+    }
+
+    #gameArea {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .balloon {
+        width: 70px;
+        height: 90px;
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+        bottom: -100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 30px;
+        font-weight: bold;
+        box-shadow: 0px 0px 10px #0005;
+        animation: floatUp 4s linear forwards; 
+    }
+
+    @keyframes floatUp {
+        0% { bottom: -100px; }
+        100% { bottom: 110%; }
+    }
+
+    #scoreBoard {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 22px;
+        color: #333;
+        background: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #0003;
+    }
+</style>
+</head>
+<body>
+
+  <div id="gameArea"></div>
+<div id="scoreBoard">Score: 0 | Missed: 0 </div>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreBoard = document.getElementById("scoreBoard");
+    let score = 0;
+    let missed = 0;
+
+    // Function for random letter generators
+    function randomLetter() {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return letters[Math.floor(Math.random() * letters.length)];
+    }
+
+    // Create balloon every 1.5 seconds
+    setInterval(createBalloon, 1500);
+
+    function createBalloon() {
+                   const balloon = document.createElement("div");
+        balloon.classList.add("balloon");
+        const letter = randomLetter();
+
+        balloon.textContent = letter;
+
+
+        // Random horizontal position
+        balloon.style.left = Math.random() * (window.innerWidth - 80) + "px";
+        gameArea.appendChild(balloon);
+        // if the balloon goes up the value increased in missed poortion is coded here
+        balloon.addEventListener("animationend", () => {
+            if (document.body.contains(balloon)) {
+                missed++;
+                updateScore();
+                balloon.remove();
+            }
+        });
+    }
+
+    // Keyboard typing handler
+                  document.addEventListener("keydown", (event) => {
+        const keyPressed = event.key.toUpperCase();
+
+     const balloons = document.querySelectorAll(".balloon");
+        balloons.forEach(balloon => {
+         if (balloon.textContent === keyPressed) {
+              
+             balloon.remove();
+                 score++;
+            updateScore();
+            }
+        });
+    });
+
+       function updateScore() {
+        scoreBoard.textContent = `Score: ${score} | Missed: ${missed}`;
+    }
+</script>
+
+</body>
+</html>
+
+<!-- Name Aadil
+CMS ID 053-23-0056 -->
